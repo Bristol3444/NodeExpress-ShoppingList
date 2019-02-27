@@ -1,58 +1,37 @@
 "use strict";
 const express = require("express");
 const items = express.Router();
-const shoppingList = [
-    {
-        id: 1,
-        product: "Beer",
-        quantity: 6,
-        price: 10.5
-    },
-    {
-        id: 2,
-        product: "Hot Dogs",
-        quantity: 4,
-        price: 4
-    },
-    {
-        id: 3,
-        product: "Cereal",
-        quantity: 1,
-        price: 2.50
-    }
-];
-items.get("/cart-items", function(req, res) {
-    res.send(shoppingList);
-    console.log(shoppingList);
+const pool = require("./connection");
+// function that on a returned promise, sends back everything from the table
+function selectAll(req, res) {
+    pool.query("select * from shopping_cart order by id asc").then(function(result) {
+        res.send(result.rows);
+    });
+}
+// get method, pulls the shopping cart table
+items.get("/cart-items", (req, res) => {
+    selectAll(req,res);
+    console.log("GET");
 });
-
-items.post("/cart-items", function(req, res) {
-    console.log(req.body);
-    shoppingList.push(req.body);
-    res.send(shoppingList);
-    console.log(shoppingList);
+// post method, adds to the table
+items.post("/cart-items", (req, res) => {
+    pool.query("insert into shopping_cart (product, price, quantity) values ($1::text, $2::int, $3::int)",[req.body.product, req.body.price, req.body.quantity]).then(function() {
+        selectAll(req, res);
+        console.log("POST");
+    });
 });
-
-items.delete("/cart-items/:id", function(req, res) {
-    for (let i = 0; i < shoppingList.length; i++) {
-        if (shoppingList[i].id == req.params.id) {
-            shoppingList.splice(i, 1);
-            res.send(shoppingList);
-            break;
-        }
-    }
-    console.log("item deleted");
-    console.log(shoppingList);
-})
-items.put("/cart-items/:id", function(req, res) {
-    for (let i = 0; i < shoppingList.length; i++) {
-        if (shoppingList[i].id == req.params.id) {
-            shoppingList.splice(i, 1, req.body);
-            res.send(shoppingList);
-            break;
-        }
-    }
-    console.log("item updated");
-    console.log(shoppingList);
-})
+// delete method, removes from the table by id
+items.delete("/cart-items/:id", (req, res) => {
+    pool.query("delete from shopping_cart where id=$1::int", [req.params.id]).then(function() {
+        selectAll(req, res);
+        console.log("DELETE");
+    });
+});
+// put method, updates the table by id
+items.put("/cart-items/:id", (req, res) => {
+    pool.query("Update shopping_cart set quantity=$1::int where id=$2::int", [req.body.quantity, req.params.id]).then(function() {
+        selectAll(req, res);
+        console.log("PUT");
+    });
+});
 module.exports = items;

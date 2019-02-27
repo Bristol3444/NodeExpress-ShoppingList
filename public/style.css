@@ -2,7 +2,7 @@ body {
     background-color: gainsboro;
     display: flex;
     flex-direction: column;
-    width: 50%;
+    width: 100%;
     justify-content: center;
     align-items: center;
 }
@@ -14,8 +14,12 @@ body {
     border-bottom: 3px solid black;
 }
 .notepad {
+    display: flex;
+    width: 100%;
+    flex-direction: column;
     font-family: 'Roboto Slab', serif;
-    text-align: center;
+    justify-content: center;
+    align-items: center;
     color: lightcyan;
     border-bottom: 1px solid lightcyan;
 }
@@ -26,4 +30,46 @@ body {
 }
 .product {
     font-size: 30px;
+}
+.quantity {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+.form {
+    display: flex;
+}
+.sub-title {
+    display: flex;
+    justify-content: center;
+    font-family: 'Roboto Slab', serif;
+}
+.enter {
+    display: flex;
+    border: none;
+    border-right: 1px solid black;
+    height: 20px;
+    margin-bottom: 20px;
+    padding-left: 5px;
+}
+.add {
+    margin-left: 20px;
+    display: flex;
+    border: 1px solid coral;
+    background-color: coral;
+    border-radius: 5px;
+    color: lightcyan;
+    font-family: 'Roboto Slab', serif;
+    height: 23px;
+}
+.remove-btn {
+    border-radius: 5px;
+    border: 1px solid white;
+    margin-bottom: 20px;
+}
+.edit-btn {
+    margin-left: 20px;
+    border-radius: 5px;
+    border: 1px solid white;
 }
